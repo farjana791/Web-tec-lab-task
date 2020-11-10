@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<admins>
+	<admin>
+		<fullname>Admin</fullname>
+		<username>admin</username>
+		<password>era1234e</password>
+		<gender>Female</gender>
+        <contact>01318640801</contact>
+        <city>Dhaka</city>
+	</admin>
+    <admin>
+      <fullName>Bithi</fullName>
+      <userName>Bithi_Era</userName>
+      <password>bithi23467</password>
+      <gender>Female</gender>
+      <mail>farjnaislambithi89@gamil.com</mail>
+       <contact>01716627986</contact>
+      <city>Barisal</city>
+     </admin>
+</admins>
