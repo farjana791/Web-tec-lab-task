@@ -1,65 +1,78 @@
- <?php 
-    $name="";
-    $err_fname="";
-    $uname="";
-    $err_uname="";
-    $pass="";
-    $err_pass="";
-    $cpass="";
-    $err_cpass="";
-	$has_err=false;
-    if(isset($_POST["login"])){
-        if(!isset($_POST["name"])){
-        //Full NAME VALIDATION
-        if(empty($_POST["name"])){
-            $err_name="Please Enter Name!";
-            $has_err=true;
-        }
-        else{
-            if(ctype_space('   ')){
-                $err_name="Name Can not be only spaces!";
-                $has_err=true;
-            $name=htmlspecialchars($_POST["name"]);
-        }
-        //USER NAME VALIDATION
-        if(empty($_POST["uname"])){
-            $err_uname="Please Enter Username!";
-            $has_err=true;
-        }
-        elseif((strlen($_POST["uname"])<6)){
-            $err_uname="Username must be 6 characters long!";
-            $has_err=true;
-        }
-        elseif(strpos($_POST["uname"]," ")){
-            $err_uname="Username can not contain any space!";
-            $has_err=true;
-        }
-        else{
-            $uname=htmlspecialchars($_POST["uname"]);
-        }
-        //PASSWORD VALIDATION
-        if(empty($_POST["pass"])){
-            $err_pass="Please Enter Password!";
-            $has_err=true;
-        }
-        elseif(strlen($_POST["pass"])<8){
-            $err_pass="Password must be 8 characters long.";
-            $has_err=true;
-        }
-        elseif(!strpos($_POST["pass"],"#") || !strpos($_POST["pass"],"?")){
-            $err_pass="Password must contain '#' or '?'.";
-            $has_err=true;
-        }
-        elseif(!strpos($_POST["pass"],"1")){
-            $err_pass="Password must contain 1 numeric.";
-            $has_err=true;
-        }
-        elseif(strtolower($_POST["pass"])==$_POST["pass"] || strtolower($_POST["pass"])==$_POST["pass"]){
-            $err_pass="Password must contain 1 Upper and Lowercase letter.";
-            $has_err=true;
-        }
-        else{
-            $pass=htmlspecialchars($_POST["pass"]);
-        }
-	
+<?php
+   $err_name="";
+   $err_uname = "";
+   $err_pass = "";
+   $err_cpass = "";
+   $err_gender = "";
+   $errMail = "";
+   $err_contact = "";
+   $r = "required*";
+   $has_err = false;
+   if (isset($_POST["OK"])) {	
+   	 if(empty($_POST["fname"])) {
+   	   $err_name = $r;
+   	   $has_err = true;
+   	 }
+   	 if (empty($_POST["uname"])) {
+   	   $err_uname = $r;
+   	   $has_err = true;
+   	 }
+   	 if (empty($_POST["pass"])) {
+   	   $err_pass = $r;
+   	   $has_err = true;
+   	 }
+   	 else if (strlen($_POST["pass"]) < 8) {
+        $err_pass = "Password must be 8 characters long";
+   	 	$has_err = true;
+   	 }
+   	 else {
+   	 	if (empty($_POST["cpass"])) {
+   	 	  $err_cpass = $r;
+   	 	  $has_err = true;
+   	 	}
+   	 	else if ($_POST["cpass"] != $_POST["pass"]) {
+   	 	  $err_cpass = "[Password and confirm password must be same";
+   	 	  $has_err = true;
+   	 	}
+   	 }
+   	 if (empty($_POST["gender"])) {
+   	 	 $err_gender = $r;
+   	 	 $has_err = true;
+   	 }
+   	 if (empty($_POST["email"])) {
+   	  	$errMail = "Mail address required*";
+   	  }
+   	  else if (strlen(strpos($_POST["email"] , "@")) > 0 && strlen(strpos($_POST["email"], ".")) > 0) {
+   	  	if (strpos($_POST["email"] , "@") > strrpos($_POST["email"], ".")) {
+   	  	  $errMail = "Invalid mail format [wrong placcement]";
+   	  	}
+   	  	else $mail = htmlspecialchars($_POST["email"]);
+   	  }
+   	  else $errMail = "Invalid mail format [Missing characters]";
+   	  if (empty($_POST["address"])) {
+   	  	$address = "Address required*";
+   	  }
+   	  if (empty($_POST["phn"])) {
+   	  	$has_err = true;
+   	  	$err_contact = $r;
+   	  }
+   	  else if (!is_numeric($_POST["phn"])) {
+   	  	$has_err = true;
+   	  	$err_contact = "Cantact number does not contain characters";
+   	  }
+   }
+   if (!$has_err && isset($_POST["ok"])) {
+   	 $newChild = simplexml_load_file("admins.xml");
+   	 $child = $newChild->addChild("admin");
+   	 $child->addChild("fullName", $_POST["fname"]);
+   	 $child->addChild("userName", $_POST["uname"]);
+   	 $child->addChild("password", $_POST["pass"]);
+   	 $child->addChild("gender", $_POST["gender"]);
+   	 $child->addChild("mail", $_POST["email"]);
+   	 $child->addChild("contact", $_POST["phn"]);
+   	 $child->addChild("city", $_POST["city"]);
+   	 $file = fopen("admins.xml", "w");
+   	 fwrite($file, $newChild->saveXML());
+   	 header("Location: login.php");
+   }
 ?>
